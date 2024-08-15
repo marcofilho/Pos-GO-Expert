@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"pos-go-expert/matematica"
+
+	"github.com/google/uuid"
 )
 
 func main() {
@@ -15,4 +17,5 @@ func main() {
 	fmt.Println(b)
 
 	fmt.Println(carro.Andar())
+	fmt.Println(uuid.New())
 }
