@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"net/http"
 	"os"
+	"strings"
 )
 
 type Curso struct {
@@ -12,6 +13,10 @@ type Curso struct {
 }
 
 type Cursos []Curso
+
+func ToUpper(s string) string {
+	return strings.ToUpper(s)
+}
 
 func main() {
 
@@ -23,6 +28,7 @@ func main() {
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		tmp := template.Must(template.New("content.html").ParseFiles(templates...))
+		tmp.Funcs(template.FuncMap{"ToUpper": ToUpper})
 
 		err := tmp.Execute(os.Stdout, Cursos{
 			{"Golang", 40},
