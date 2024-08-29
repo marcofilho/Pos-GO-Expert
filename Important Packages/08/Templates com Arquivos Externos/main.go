@@ -14,8 +14,15 @@ type Curso struct {
 type Cursos []Curso
 
 func main() {
+
+	templates := []string{
+		"header.html",
+		"content.html",
+		"footer.html",
+	}
+
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		tmp := template.Must(template.New("template.html").ParseFiles("template.html"))
+		tmp := template.Must(template.New("content.html").ParseFiles(templates...))
 
 		err := tmp.Execute(os.Stdout, Cursos{
 			{"Golang", 40},
