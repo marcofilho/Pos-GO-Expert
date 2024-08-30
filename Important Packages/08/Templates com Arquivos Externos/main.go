@@ -27,8 +27,9 @@ func main() {
 	}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		tmp := template.Must(template.New("content.html").ParseFiles(templates...))
+		tmp := template.New("content.html")
 		tmp.Funcs(template.FuncMap{"ToUpper": ToUpper})
+		tmp = template.Must(tmp.ParseFiles(templates...))
 
 		err := tmp.Execute(os.Stdout, Cursos{
 			{"Golang", 40},
