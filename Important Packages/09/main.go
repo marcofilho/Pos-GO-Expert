@@ -15,7 +15,6 @@ func main() {
 	resp, err := client.Get("https://google.com")
 	if err != nil {
 		panic(err)
-		return
 	}
 
 	defer resp.Body.Close()
