@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -28,15 +26,15 @@ func main() {
 	// 	Name:  "Laptop",
 	// 	Price: 1000})
 
-	products := []Product{
-		{Name: "Laptop", Price: 1500},
-		{Name: "Mouse", Price: 10},
-		{Name: "Keyboard", Price: 20},
-		{Name: "Monitor", Price: 200},
-	}
+	// products := []Product{
+	// 	{Name: "Laptop", Price: 1500},
+	// 	{Name: "Mouse", Price: 10},
+	// 	{Name: "Keyboard", Price: 20},
+	// 	{Name: "Monitor", Price: 200},
+	// }
 
-	//create multiple records
-	db.Create(&products)
+	// //create multiple records
+	// db.Create(&products)
 
 	//read all records
 	//db.Find(&products)
@@ -65,9 +63,9 @@ func main() {
 	// product.Name = "New Laptop"
 	// db.Save(&product)
 
-	var product2 Product
-	db.First(&product2, 1)
-	fmt.Println(product2.Name, product2.Price)
+	// var product2 Product
+	// db.First(&product2, 1)
+	// fmt.Println(product2.Name, product2.Price)
 
-	db.Delete(&product2)
+	// db.Delete(&product2)
 }
