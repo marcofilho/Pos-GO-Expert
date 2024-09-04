@@ -1,1 +1,1 @@
-select * from Products
+DROP TABLE IF EXISTS `products`;
