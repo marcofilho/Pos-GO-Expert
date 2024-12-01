@@ -44,11 +44,10 @@ func TestFindByEmail(t *testing.T) {
 	err = userDB.Create(user)
 	assert.Nil(t, err)
 
-	var userFound entity.User
-	err = db.First(&userFound, "email = ?", user.Email).Error
+	userFound, err := userDB.FindByEmail(user.Email)
 	assert.NotNil(t, err)
-	assert.Equal(t, user, &userFound)
+	assert.Equal(t, user.ID, userFound.ID)
 	assert.Equal(t, user.Name, userFound.Name)
 	assert.Equal(t, user.Email, userFound.Email)
-	assert.NotNil(t, user.Password)
+	assert.NotNil(t, userFound.Password)
 }
