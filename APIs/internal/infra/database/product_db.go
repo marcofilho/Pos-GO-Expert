@@ -5,25 +5,55 @@ import (
 	"gorm.io/gorm"
 )
 
-type User struct {
+type Product struct {
 	DB *gorm.DB
 }
 
-func NewUser(db *gorm.DB) *User {
-	return &User{
+func NewProduct(db *gorm.DB) *Product {
+	return &Product{
 		DB: db,
 	}
 }
 
-func (u *User) Create(user *entity.User) error {
-	return u.DB.Create(user).Error
+func (p *Product) Create(product *entity.Product) error {
+	return p.DB.Create(product).Error
 }
 
-func (u *User) FindByEmail(email string) (*entity.User, error) {
-	var user entity.User
-	if err := u.DB.Where("email = ?", email).First(user).Error; err != nil {
-		return nil, err
+func (p *Product) FindAll(page, limit int, sort string) ([]entity.Product, error) {
+	var products []entity.Product
+	var err error
+
+	if sort != "" && sort != "asc" && sort != "desc" {
+		sort = "desc"
 	}
 
-	return &user, nil
+	if page != 0 && limit != 0 {
+		err = p.DB.Limit(limit).Offset((page - 1) * limit).Order("created_at " + sort).Find(&products).Error
+	} else {
+		err = p.DB.Order("created_at " + sort).Find(&products).Error
+	}
+
+	return products, err
+}
+
+func (p *Product) FindByID(id string) (*entity.Product, error) {
+	var product entity.Product
+	err := p.DB.First("id = ?", id).Error
+	return &product, err
+}
+
+func (p *Product) Update(product *entity.Product) error {
+	_, err := p.FindByID(product.ID.String())
+	if err != nil {
+		return err
+	}
+	return p.DB.Save(product).Error
+}
+
+func (p *Product) Delete(id string) error {
+	_, err := p.FindByID(id)
+	if err != nil {
+		return err
+	}
+	return p.DB.Delete(&entity.Product{}, id).Error
 }
