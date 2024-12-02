@@ -43,7 +43,7 @@ func (p *Product) FindByID(id string) (*entity.Product, error) {
 }
 
 func (p *Product) Update(product *entity.Product) error {
-	product, err := p.FindByID(product.ID.String())
+	_, err := p.FindByID(product.ID.String())
 	if err != nil {
 		return err
 	}
