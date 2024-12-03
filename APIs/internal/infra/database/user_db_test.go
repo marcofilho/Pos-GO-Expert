@@ -9,45 +9,51 @@ import (
 	"gorm.io/gorm"
 )
 
-func TestCreateUser(t *testing.T) {
+func setupUserTestDB(t *testing.T) *gorm.DB {
 	db, err := gorm.Open(sqlite.Open("file::memory:"), &gorm.Config{})
 	if err != nil {
-		t.Error(err)
+		t.Fatalf("failed to connect database: %v", err)
 	}
 	db.AutoMigrate(&entity.User{})
-
-	user, _ := entity.NewUser("Maya", "maya_lima@gmail.com", "123456")
-	userDB := NewUser(db)
-
-	err = userDB.Create(user)
-	assert.Nil(t, err)
-
-	var userFound entity.User
-	err = db.First(&userFound, "id = ?", user.ID).Error
-	assert.Nil(t, err)
-	assert.Equal(t, user, &userFound)
-	assert.Equal(t, user.Name, userFound.Name)
-	assert.Equal(t, user.Email, userFound.Email)
-	assert.NotNil(t, user.Password)
+	return db
 }
 
-func TestFindByEmail(t *testing.T) {
-	db, err := gorm.Open(sqlite.Open("file::memory:"), &gorm.Config{})
-	if err != nil {
-		t.Error(err)
-	}
-	db.AutoMigrate(&entity.User{})
+func TestUserDB(t *testing.T) {
 
-	user, _ := entity.NewUser("Maya", "maya_lima@gmail.com", "123456")
-	userDB := NewUser(db)
+	t.Run("TestNewUser", func(t *testing.T) {
+		db := setupUserTestDB(t)
 
-	err = userDB.Create(user)
-	assert.Nil(t, err)
+		user, err := entity.NewUser("Maya", "maya_lima@gmail.com", "123456")
+		assert.Nil(t, err)
 
-	userFound, err := userDB.FindByEmail(user.Email)
-	assert.Nil(t, err)
-	assert.Equal(t, user.ID, userFound.ID)
-	assert.Equal(t, user.Name, userFound.Name)
-	assert.Equal(t, user.Email, userFound.Email)
-	assert.NotNil(t, userFound.Password)
+		userDB := NewUser(db)
+		err = userDB.Create(user)
+		assert.Nil(t, err)
+
+		var userFound entity.User
+		err = db.First(&userFound, "id = ?", user.ID).Error
+		assert.Nil(t, err)
+		assert.Equal(t, user, &userFound)
+		assert.Equal(t, user.Name, userFound.Name)
+		assert.Equal(t, user.Email, userFound.Email)
+		assert.NotNil(t, user.Password)
+	})
+
+	t.Run("TestFindByEmail", func(t *testing.T) {
+		db := setupUserTestDB(t)
+
+		user, err := entity.NewUser("Maya", "maya_lima@gmail.com", "123456")
+		assert.Nil(t, err)
+
+		userDB := NewUser(db)
+		err = userDB.Create(user)
+		assert.Nil(t, err)
+
+		userFound, err := userDB.FindByEmail(user.Email)
+		assert.Nil(t, err)
+		assert.Equal(t, user.ID, userFound.ID)
+		assert.Equal(t, user.Name, userFound.Name)
+		assert.Equal(t, user.Email, userFound.Email)
+		assert.NotNil(t, userFound.Password)
+	})
 }
