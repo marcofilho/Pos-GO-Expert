@@ -3,6 +3,8 @@ package main
 import (
 	"net/http"
 
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/marcofilho/Pos-GO-Expert/APIs/configs"
 	"github.com/marcofilho/Pos-GO-Expert/APIs/internal/entity"
 	"github.com/marcofilho/Pos-GO-Expert/APIs/internal/infra/database"
@@ -26,6 +28,13 @@ func main() {
 	productDB := database.NewProduct(db)
 	productHandler := handlers.NewProductHandler(productDB)
 
-	http.HandleFunc("/products", productHandler.CreateProduct)
-	http.ListenAndServe(":8000", nil)
+	router := chi.NewRouter()
+	router.Use(middleware.Logger)
+	router.Post("/products", productHandler.CreateProduct)
+	router.Get("/products", productHandler.GetProducts)
+	router.Get("/products/{id}", productHandler.GetProduct)
+	router.Put("/products/{id}", productHandler.UpdateProduct)
+	router.Delete("/products/{id}", productHandler.DeleteProduct)
+
+	http.ListenAndServe(":8000", router)
 }
