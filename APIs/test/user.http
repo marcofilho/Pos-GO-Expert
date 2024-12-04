@@ -1,0 +1,32 @@
+POST http://localhost:8000/users HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Maya",
+    "email": "maya_lima@gmail.com",
+    "password": "123456"
+}
+
+###
+
+GET http://localhost:8000/users/58d3a716-60d0-4183-9c78-2bf8671c0b30 HTTP/1.1
+
+###
+
+PUT http://localhost:8000/users/58d3a716-60d0-4183-9c78-2bf8671c0b30 HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Maya",
+    "price": "maya_lima01@gmail.com",
+    "password": "123456"
+}
+
+###
+
+DELETE http://localhost:8000/users/58d3a716-60d0-4183-9c78-2bf8671c0b30	HTTP/1.1
+
+
+###
+
+GET http://localhost:8000/users HTTP/1.1
