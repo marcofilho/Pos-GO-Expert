@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -34,6 +35,9 @@ func main() {
 
 	router := chi.NewRouter()
 	router.Use(middleware.Logger)
+	router.Use(middleware.Recoverer)
+	router.Use(middleware.WithValue("jwt", config.TokenAuth))
+	router.Use(middleware.WithValue("jwtExpiresIn", config.JwtExpiresIn))
 
 	router.Route("/products", func(r chi.Router) {
 		router.Use(jwtauth.Verifier(config.TokenAuth))
@@ -45,8 +49,15 @@ func main() {
 		router.Delete("/{id}", productHandler.DeleteProduct)
 	})
 
-	router.Post("/users", userHandler.CreateUser)
+	router.Post("/users", userHandler.Create)
 	router.Post("/users/generate_token", userHandler.GetJWT)
 
 	http.ListenAndServe(":8000", router)
+}
+
+func LogRequest(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		log.Println(r.Method, r.URL.Path)
+		next.ServeHTTP(w, r)
+	})
 }
