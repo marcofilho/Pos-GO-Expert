@@ -11,10 +11,26 @@ import (
 	"github.com/marcofilho/Pos-GO-Expert/APIs/internal/entity"
 	"github.com/marcofilho/Pos-GO-Expert/APIs/internal/infra/database"
 	"github.com/marcofilho/Pos-GO-Expert/APIs/internal/infra/webserver/handlers"
+	httpSwagger "github.com/swaggo/http-swagger"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
+// @title 				Swagger Example API
+// @version 			1.0
+// @description 		This is a sample server Petstore server.
+// @termsOfService 		http://swagger.io/terms/
+
+// @contact.name 		Marco Filho
+// @contact.email 		m.barceloslima@gmail.com
+
+// @license.name 		Private License
+
+// @host 				localhost:8000
+// @BasePath 			/
+// @securityDefinitions.apikey ApiKeyAuth
+// @in 					header
+// @name				Authorization
 func main() {
 	config, err := configs.LoadConfig(".")
 	if err != nil {
@@ -51,6 +67,8 @@ func main() {
 
 	router.Post("/users", userHandler.Create)
 	router.Post("/users/generate_token", userHandler.GetJWT)
+
+	router.Get("/docs/*", httpSwagger.Handler(httpSwagger.URL("http://localhost:8000/docs/doc.json")))
 
 	http.ListenAndServe(":8000", router)
 }

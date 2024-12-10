@@ -11,6 +11,10 @@ import (
 	"github.com/marcofilho/Pos-GO-Expert/APIs/internal/infra/database"
 )
 
+type Error struct {
+	Message string `json:"message"`
+}
+
 type UserHandler struct {
 	UserDB       database.UserInterface
 	Jwt          *jwtauth.JWTAuth
@@ -26,24 +30,28 @@ func NewUserHandler(userDB database.UserInterface, jwt *jwtauth.JWTAuth, jwtExpi
 }
 
 func (h *UserHandler) GetJWT(w http.ResponseWriter, r *http.Request) {
-	var user dto.GetJWTInput
 	jwt := r.Context().Value("jwt").(*jwtauth.JWTAuth)
 	jwtExpiresIn := r.Context().Value("jwtExpiresIn").(int)
+	var user dto.GetJWTInput
 
-	error := json.NewDecoder(r.Body).Decode(&user)
-	if error != nil {
+	err := json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	u, err := h.UserDB.FindByEmail(user.Email)
 	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
+		w.WriteHeader(http.StatusNotFound)
+		error := Error{Message: err.Error()}
+		json.NewEncoder(w).Encode(error)
 		return
 	}
 
 	if !u.ValidatePassword(user.Password) {
 		w.WriteHeader(http.StatusUnauthorized)
+		error := Error{Message: err.Error()}
+		json.NewEncoder(w).Encode(error)
 		return
 	}
 
@@ -71,12 +79,16 @@ func (u *UserHandler) Create(w http.ResponseWriter, r *http.Request) {
 	user, err := entity.NewUser(userInput.Name, userInput.Email, userInput.Password)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		error := Error{Message: err.Error()}
+		json.NewEncoder(w).Encode(error)
 		return
 	}
 
 	err = u.UserDB.Create(user)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		error := Error{Message: err.Error()}
+		json.NewEncoder(w).Encode(error)
 		return
 	}
 

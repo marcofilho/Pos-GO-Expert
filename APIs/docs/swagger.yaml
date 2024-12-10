@@ -1,0 +1,19 @@
+basePath: /
+host: localhost:8000
+info:
+  contact:
+    email: m.barceloslima@gmail.com
+    name: Marco Filho
+  description: This is a sample server Petstore server.
+  license:
+    name: Private License
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Example API
+  version: "1.0"
+paths: {}
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
