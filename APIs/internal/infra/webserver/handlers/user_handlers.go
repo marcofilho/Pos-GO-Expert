@@ -29,6 +29,17 @@ func NewUserHandler(userDB database.UserInterface, jwt *jwtauth.JWTAuth, jwtExpi
 	}
 }
 
+// GetJWT godoc
+// @Summary 	Get JWT
+// @Description Get JWT
+// @Tags 		users
+// @Accept  	json
+// @Produce  	json
+// @Param 		request		 body 		dto.GetJWTInput		 true		 "User Credentials"
+// @Success 	200 {object} dto.GetJWTOutput
+// @Failure 	404 {object} Error
+// @Failure 	500 {object} Error
+// @Router 		/users/generate_token [post]
 func (h *UserHandler) GetJWT(w http.ResponseWriter, r *http.Request) {
 	jwt := r.Context().Value("jwt").(*jwtauth.JWTAuth)
 	jwtExpiresIn := r.Context().Value("jwtExpiresIn").(int)
@@ -67,6 +78,16 @@ func (h *UserHandler) GetJWT(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// Create user godoc
+// @Summary 	Create User
+// @Description Create User
+// @Tags 		users
+// @Accept  	json
+// @Produce  	json
+// @Param 		request		 body		 dto.CreateUserInput 		true 		"User Request"
+// @Success 	201
+// @Failure 	500 {object} Error
+// @Router 		/users [post]
 func (u *UserHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var userInput dto.CreateUserInput
 
