@@ -5,9 +5,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-var cfg *config
-
-type config struct {
+type conf struct {
 	DBDriver      string `mapstructure:"DB_DRIVER"`
 	DBHost        string `mapstructure:"DB_HOST"`
 	DBPort        string `mapstructure:"DB_PORT"`
@@ -15,12 +13,14 @@ type config struct {
 	DBPassword    string `mapstructure:"DB_PASSWORD"`
 	DBName        string `mapstructure:"DB_NAME"`
 	WebServerPort string `mapstructure:"WEB_SERVER_PORT"`
-	JwtSecret     string `mapstructure:"JWT_SECRET"`
-	JwtExpiresIn  int    `mapstructure:"JWT_EXPIRES_IN"`
+	JWTSecret     string `mapstructure:"JWT_SECRET"`
+	JwtExpiresIn  int    `mapstructure:"JWT_EXPIRESIN"`
 	TokenAuth     *jwtauth.JWTAuth
 }
 
-func LoadConfig(path string) (*config, error) {
+func LoadConfig(path string) (*conf, error) {
+	var cfg *conf
+
 	viper.SetConfigName("app_config")
 	viper.SetConfigType("env")
 	viper.AddConfigPath(path)
@@ -34,9 +34,9 @@ func LoadConfig(path string) (*config, error) {
 
 	err = viper.Unmarshal(&cfg)
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
 
-	cfg.TokenAuth = jwtauth.New("HS256", []byte(cfg.JwtSecret), nil)
-	return cfg, nil
+	cfg.TokenAuth = jwtauth.New("HS256", []byte(cfg.JWTSecret), nil)
+	return cfg, err
 }

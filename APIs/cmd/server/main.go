@@ -47,30 +47,30 @@ func main() {
 	productHandler := handlers.NewProductHandler(productDB)
 
 	userDB := database.NewUser(db)
-	userHandler := handlers.NewUserHandler(userDB, config.TokenAuth, config.JwtExpiresIn)
+	userHandler := handlers.NewUserHandler(userDB)
 
-	router := chi.NewRouter()
-	router.Use(middleware.Logger)
-	router.Use(middleware.Recoverer)
-	router.Use(middleware.WithValue("jwt", config.TokenAuth))
-	router.Use(middleware.WithValue("jwtExpiresIn", config.JwtExpiresIn))
+	r := chi.NewRouter()
+	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
+	r.Use(middleware.WithValue("jwt", config.TokenAuth))
+	r.Use(middleware.WithValue("JwtExpiresIn", config.JwtExpiresIn))
 
-	router.Route("/products", func(r chi.Router) {
-		router.Use(jwtauth.Verifier(config.TokenAuth))
-		router.Use(jwtauth.Authenticator)
-		router.Post("/", productHandler.CreateProduct)
-		router.Get("/", productHandler.GetProducts)
-		router.Get("/{id}", productHandler.GetProduct)
-		router.Put("/{id}", productHandler.UpdateProduct)
-		router.Delete("/{id}", productHandler.DeleteProduct)
+	r.Route("/products", func(r chi.Router) {
+		r.Use(jwtauth.Verifier(config.TokenAuth))
+		r.Use(jwtauth.Authenticator)
+		r.Post("/", productHandler.CreateProduct)
+		r.Get("/", productHandler.GetProducts)
+		r.Get("/{id}", productHandler.GetProduct)
+		r.Put("/{id}", productHandler.UpdateProduct)
+		r.Delete("/{id}", productHandler.DeleteProduct)
 	})
 
-	router.Post("/users", userHandler.Create)
-	router.Post("/users/generate_token", userHandler.GetJWT)
+	r.Post("/users", userHandler.Create)
+	r.Post("/users/generate_token", userHandler.GetJWT)
 
-	router.Get("/docs/*", httpSwagger.Handler(httpSwagger.URL("http://localhost:8000/docs/doc.json")))
+	r.Get("/docs/*", httpSwagger.Handler(httpSwagger.URL("http://localhost:8000/docs/doc.json")))
 
-	http.ListenAndServe(":8000", router)
+	http.ListenAndServe(":8000", r)
 }
 
 func LogRequest(next http.Handler) http.Handler {

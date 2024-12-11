@@ -21,11 +21,9 @@ type UserHandler struct {
 	JwtExpiresIn int
 }
 
-func NewUserHandler(userDB database.UserInterface, jwt *jwtauth.JWTAuth, jwtExpiresIn int) *UserHandler {
+func NewUserHandler(userDB database.UserInterface) *UserHandler {
 	return &UserHandler{
-		UserDB:       userDB,
-		Jwt:          jwt,
-		JwtExpiresIn: jwtExpiresIn,
+		UserDB: userDB,
 	}
 }
 
@@ -42,7 +40,7 @@ func NewUserHandler(userDB database.UserInterface, jwt *jwtauth.JWTAuth, jwtExpi
 // @Router 		/users/generate_token [post]
 func (h *UserHandler) GetJWT(w http.ResponseWriter, r *http.Request) {
 	jwt := r.Context().Value("jwt").(*jwtauth.JWTAuth)
-	jwtExpiresIn := r.Context().Value("jwtExpiresIn").(int)
+	jwtExpiresIn := r.Context().Value("JwtExpiresIn").(int)
 	var user dto.GetJWTInput
 
 	err := json.NewDecoder(r.Body).Decode(&user)

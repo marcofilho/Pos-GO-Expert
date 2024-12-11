@@ -8,7 +8,9 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:8000/products/4ad214a3-e505-42e7-80f0-679ea14cab77 HTTP/1.1
+GET http://localhost:8000/products/5cf06dc3-1c71-4fb0-8434-ffdc191051db HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzM4Nzg1NDQsInN1YiI6IjU4ZDNhNzE2LTYwZDAtNDE4My05Yzc4LTJiZjg2NzFjMGIzMCJ9.Ojs1dMc2zBCVrLqSQP2RWai_-lKuI7x6q4uHZ0eQy7w
+
 
 ###
 
@@ -28,3 +30,4 @@ DELETE http://localhost:8000/products/4ad214a3-e505-42e7-80f0-679ea14cab77 HTTP/
 ###
 
 GET http://localhost:8000/products HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzM4Nzg1NDQsInN1YiI6IjU4ZDNhNzE2LTYwZDAtNDE4My05Yzc4LTJiZjg2NzFjMGIzMCJ9.Ojs1dMc2zBCVrLqSQP2RWai_-lKuI7x6q4uHZ0eQy7w
