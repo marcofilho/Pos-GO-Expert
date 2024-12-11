@@ -28,12 +28,12 @@ func NewUserHandler(userDB database.UserInterface) *UserHandler {
 }
 
 // GetJWT godoc
-// @Summary 	Get JWT
-// @Description Get JWT
+// @Summary 	Get a user JWT
+// @Description Get a user JWT
 // @Tags 		users
 // @Accept  	json
 // @Produce  	json
-// @Param 		request		 body 		dto.GetJWTInput		 true		 "User Credentials"
+// @Param 		request		 body		 dto.GetJWTInput 		true 		"User Credentials"
 // @Success 	200 {object} dto.GetJWTOutput
 // @Failure 	404 {object} Error
 // @Failure 	500 {object} Error

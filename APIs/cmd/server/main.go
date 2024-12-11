@@ -8,6 +8,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/jwtauth"
 	"github.com/marcofilho/Pos-GO-Expert/APIs/configs"
+	_ "github.com/marcofilho/Pos-GO-Expert/APIs/docs"
 	"github.com/marcofilho/Pos-GO-Expert/APIs/internal/entity"
 	"github.com/marcofilho/Pos-GO-Expert/APIs/internal/infra/database"
 	"github.com/marcofilho/Pos-GO-Expert/APIs/internal/infra/webserver/handlers"
