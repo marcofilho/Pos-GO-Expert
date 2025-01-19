@@ -1,1 +1,1 @@
-Estudos da Pós Graduação GO Expert na Full Cycle
+Post Graduation Program GO Expert, focused on the programming langue Golang
