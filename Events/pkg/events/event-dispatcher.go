@@ -9,8 +9,8 @@ type EventDispatcher struct {
 	handlers map[string][]EventHandlerInterface
 }
 
-var ErrHandlerAlreadyRegistered = errors.New("Handler already registered")
-var ErrHandlerHasNotExist = errors.New("Event not found")
+var ErrHandlerAlreadyRegistered = errors.New("handler already registered")
+var ErrHandlerHasNotExist = errors.New("event not found")
 
 func NewEventDispatcher() *EventDispatcher {
 	return &EventDispatcher{
