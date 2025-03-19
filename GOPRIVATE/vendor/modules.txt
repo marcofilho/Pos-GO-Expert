@@ -1,0 +1,3 @@
+# github.com/marcofilho/fcutils-secret v0.0.0-20250319011807-0e803857c0e3
+## explicit; go 1.24.0
+github.com/marcofilho/fcutils-secret/pkg/events
