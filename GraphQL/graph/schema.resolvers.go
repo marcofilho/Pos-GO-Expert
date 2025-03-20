@@ -27,7 +27,7 @@ func (r *mutationResolver) CreateCategory(ctx context.Context, input model.NewCa
 
 // CreateCourse is the resolver for the createCourse field.
 func (r *mutationResolver) CreateCourse(ctx context.Context, input model.NewCourse) (*model.Course, error) {
-	course, err := r.CourseDB.CreateCourse(input.Name, *input.Description)
+	course, err := r.CourseDB.CreateCourse(input.Name, *input.Description, input.CategoryID)
 	if err != nil {
 		return nil, err
 	}
@@ -41,17 +41,46 @@ func (r *mutationResolver) CreateCourse(ctx context.Context, input model.NewCour
 
 // Categories is the resolver for the categories field.
 func (r *queryResolver) Categories(ctx context.Context) ([]*model.Category, error) {
-	panic(fmt.Errorf("not implemented: Categories - categories"))
-}
+	categories, err := r.CategoryDB.FindAll()
+	if err != nil {
+		return nil, err
+	}
 
-// Category is the resolver for the category field.
-func (r *queryResolver) Category(ctx context.Context, id string) (*model.Category, error) {
-	panic(fmt.Errorf("not implemented: Category - category"))
+	var result []*model.Category
+
+	for _, category := range categories {
+		result = append(result, &model.Category{
+			ID:          category.ID,
+			Name:        category.Name,
+			Description: &category.Description,
+		})
+	}
+
+	return result, nil
 }
 
 // Courses is the resolver for the courses field.
 func (r *queryResolver) Courses(ctx context.Context) ([]*model.Course, error) {
-	panic(fmt.Errorf("not implemented: Courses - courses"))
+	courses, err := r.CourseDB.FindAll()
+	if err != nil {
+		return nil, err
+	}
+
+	var result []*model.Course
+
+	for _, course := range courses {
+		result = append(result, &model.Course{
+			ID:          course.ID,
+			Name:        course.Name,
+			Description: &course.Description,
+		})
+	}
+	return result, nil
+}
+
+// Category is the resolver for the category field.
+func (r *queryResolver) Category(ctx context.Context, id string) (*model.Category, error) {
+	panic(fmt.Errorf("ot implemented: Category - category"))
 }
 
 // Course is the resolver for the course field.
