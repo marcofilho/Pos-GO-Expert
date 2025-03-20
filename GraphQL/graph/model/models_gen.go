@@ -15,6 +15,3 @@ type NewCourse struct {
 	Description *string `json:"description,omitempty"`
 	CategoryID  string  `json:"categoryId"`
 }
-
-type Query struct {
-}
