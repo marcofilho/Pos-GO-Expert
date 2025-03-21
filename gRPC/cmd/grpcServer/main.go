@@ -19,6 +19,15 @@ func main() {
 	}
 	defer db.Close()
 
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS categories (
+        id TEXT,
+        name TEXT,
+        description TEXT
+    )`)
+	if err != nil {
+		panic(err)
+	}
+
 	categoryDB := database.NewCategory(db)
 	categoryService := service.NewCategoryService(*categoryDB)
 
