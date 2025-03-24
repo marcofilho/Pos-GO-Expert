@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"sync"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
@@ -15,6 +16,7 @@ import (
 var (
 	s3Client *s3.S3
 	s3Bucket string
+	wg       sync.WaitGroup
 )
 
 func init() {
@@ -42,6 +44,20 @@ func main() {
 	}
 	defer dir.Close()
 
+	uploadController := make(chan struct{}, 100)
+	errorController := make(chan string, 10)
+
+	go func() {
+		for {
+			select {
+			case fileName := <-errorController:
+				uploadController <- struct{}{}
+				wg.Add(1)
+				go uploadFileAWS(fileName, uploadController, errorController)
+			}
+		}
+	}()
+
 	for {
 		files, err := dir.ReadDir(1)
 		if err != nil {
@@ -51,17 +67,23 @@ func main() {
 			fmt.Printf("Error reading directory: %s\n", err)
 			continue
 		}
-		uploadFileAWS(files[0].Name())
+		wg.Add(1)
+		uploadController <- struct{}{}
+		go uploadFileAWS(files[0].Name(), uploadController, errorController)
 	}
+	wg.Wait()
 }
 
-func uploadFileAWS(fileName string) {
+func uploadFileAWS(fileName string, uploadController <-chan struct{}, errorController chan<- string) {
+	defer wg.Done()
 	completeFileName := fmt.Sprintf("./tmp/%s" + fileName)
 	fmt.Printf("Uploading file %s to AWS S3 Bucket %s\n", completeFileName, s3Bucket)
 
 	file, err := os.Open(fileName)
 	if err != nil {
 		fmt.Sprintf("Error opening file %s\n", fileName)
+		<-uploadController
+		errorController <- completeFileName
 		return
 	}
 	defer file.Close()
@@ -72,6 +94,12 @@ func uploadFileAWS(fileName string) {
 		Body:   file,
 	})
 	if err != nil {
-		log.Fatal(err)
+		fmt.Printf("Error uploading file %s\n", fileName)
+		<-uploadController
+		errorController <- completeFileName
+		return
 	}
+
+	fmt.Printf("File %s uploaded successfully\n", fileName)
+	<-uploadController
 }
