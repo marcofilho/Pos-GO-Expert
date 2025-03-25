@@ -1,6 +1,3 @@
-/*
-Copyright © 2025 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -41,14 +38,4 @@ func init() {
 	categoryCmd.PersistentFlags().StringVarP(&category, "name", "n", "Y", "Name of the category")
 	categoryCmd.PersistentFlags().BoolVarP(&exists, "exists", "e", false, "Check if the category exists")
 	categoryCmd.PersistentFlags().Int16VarP(&id, "id", "i", 0, "ID of the category")
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// categoryCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// categoryCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
