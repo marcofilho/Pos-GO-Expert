@@ -3,7 +3,7 @@ module github.com/marcofilho/Pos-GO-Expert/GraphQL
 go 1.24.0
 
 require (
-	github.com/99designs/gqlgen v0.17.68
+	github.com/99designs/gqlgen v0.17.70
 	github.com/google/uuid v1.6.0
 	github.com/mattn/go-sqlite3 v1.14.24
 	github.com/vektah/gqlparser/v2 v2.5.23

@@ -20,9 +20,9 @@ import (
 const defaultPort = "8080"
 
 func main() {
-	db, err := sql.Open("sqlite3", "./data.db")
+	db, err := sql.Open("sqlite3", "./db.sqlite")
 	if err != nil {
-		log.Fatalf("failed to open database: %v", err)
+		panic(err)
 	}
 	defer db.Close()
 
@@ -39,6 +39,7 @@ func main() {
         id TEXT,
         name TEXT,
         description TEXT
+		category_id TEXT
     )`)
 	if err != nil {
 		panic(err)

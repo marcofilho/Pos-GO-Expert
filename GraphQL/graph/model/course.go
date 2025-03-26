@@ -1,8 +1,7 @@
 package model
 
 type Course struct {
-	ID          string
-	Name        string
-	Description *string
-	Category    *Category
+	ID          string  `json:"id"`
+	Name        string  `json:"name"`
+	Description *string `json:"description"`
 }
