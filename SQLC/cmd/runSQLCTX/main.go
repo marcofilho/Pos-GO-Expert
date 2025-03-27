@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/google/uuid"
 	"github.com/marcofilho/Pos-GO-Expert/SQLC/internal/db"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -98,43 +97,33 @@ func main() {
 
 	queries := db.New(dbConnection)
 
-	courseArgs := CourseParams{
-		ID:          uuid.New().String(),
-		Name:        "Go Expert",
-		Description: sql.NullString{String: "Go Expert Post Graduation", Valid: true},
-		Price:       1988.99,
-	}
+	// courseArgs := CourseParams{
+	// 	ID:          uuid.New().String(),
+	// 	Name:        "Go Expert",
+	// 	Description: sql.NullString{String: "Go Expert Post Graduation", Valid: true},
+	// 	Price:       1988.99,
+	// }
 
-	categoryArgs := CategoryParams{
-		ID:          uuid.New().String(),
-		Name:        "Backend Development",
-		Description: sql.NullString{String: "Backend Development course type", Valid: true},
-	}
+	// categoryArgs := CategoryParams{
+	// 	ID:          uuid.New().String(),
+	// 	Name:        "Backend Development",
+	// 	Description: sql.NullString{String: "Backend Development course type", Valid: true},
+	// }
 
-	courseDB := NewCourseDB(dbConnection)
+	// courseDB := NewCourseDB(dbConnection)
 
-	err = courseDB.CreateCourseAndCategory(ctx, categoryArgs, courseArgs)
+	// err = courseDB.CreateCourseAndCategory(ctx, categoryArgs, courseArgs)
+	// if err != nil {
+	// 	panic(err)
+	// }
+
+	courses, err := queries.ListCoursesByCategory(ctx)
 	if err != nil {
 		panic(err)
 	}
-
-	categories, err := queries.ListCategories(ctx)
-	if err != nil {
-		panic(err)
-	}
-
-	for _, course := range categories {
-		fmt.Printf("Category: %s, Category ID: %s, Category Name: %s, Category Description: %s",
-			course.Name, course.ID, course.Name, course.Description.String)
-	}
-
-	courses, err := queries.ListCourses(ctx)
-	if err != nil {
-		panic(err)
-	}
-
 	for _, course := range courses {
-		fmt.Printf("Category: %s, Course ID: %s, Course Name: %s, Course Description: %s, Course Price: %f",
-			course.Name, course.ID, course.Name, course.Description.String, course.Price)
+		fmt.Printf("Category: %s, Course ID: %s, Name: %s, Description: %s, Price: %.2f\n",
+			course.CategoryName, course.ID, course.Name, course.Description.String, course.Price)
 	}
+
 }
