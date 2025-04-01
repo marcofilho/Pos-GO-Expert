@@ -1,7 +1,5 @@
-//go:build wire_gen
-// +build wire_gen
-
-//go:generate wire
+//go:build wireinject
+// +build wireinject
 
 package main
 
@@ -12,10 +10,15 @@ import (
 	"github.com/marcofilho/Pos-GO-Expert/DependencyInjection/product"
 )
 
+var setRepositoryDependency = wire.NewSet(
+	product.NewProductRepository,
+	wire.Bind(new(product.ProductRepositoryInterface), new(*product.ProductRepository)),
+)
+
 // NewUseCase wires the dependencies for ProductUseCase.
 func NewUseCase(db *sql.DB) *product.ProductUseCase {
 	wire.Build(
-		product.NewProductRepository,
+		setRepositoryDependency,
 		product.NewProductUseCase,
 	)
 	return &product.ProductUseCase{} // This is required for compilation.
