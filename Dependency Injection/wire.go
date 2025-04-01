@@ -1,6 +1,8 @@
 //go:build wire_gen
 // +build wire_gen
 
+//go:generate wire
+
 package main
 
 import (

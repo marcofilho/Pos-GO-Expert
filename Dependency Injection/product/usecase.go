@@ -10,10 +10,6 @@ func NewProductUsecase(repo *ProductRepository) *ProductUsecase {
 	}
 }
 
-func (u *ProductUsecase) GetProduct(id int) (Product, error) {
-	product, err := u.repo.GetProductByID(id)
-	if err != nil {
-		return Product{}, nil
-	}
-	return product, nil
+func (u *ProductUsecase) GetProduct(id int) (*Product, error) {
+	return u.repo.GetProductByID(id)
 }
