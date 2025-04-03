@@ -1,0 +1,7 @@
+type Order {
+  id: ID!
+  Price: String!
+  product: String!
+  quantity: Int!
+  price: Float!
+}
