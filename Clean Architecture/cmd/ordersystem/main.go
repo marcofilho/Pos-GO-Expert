@@ -10,7 +10,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/marcofilho/Pos-GO-Expert/CleanArchitecture/configs"
 	"github.com/marcofilho/Pos-GO-Expert/CleanArchitecture/internal/event/handler"
-	"github.com/marcofilho/Pos-GO-Expert/CleanArchitecture/internal/infra/gRPC/internal/infra/gRPC/pb"
+	"github.com/marcofilho/Pos-GO-Expert/CleanArchitecture/internal/infra/gRPC/pb"
 	"github.com/marcofilho/Pos-GO-Expert/CleanArchitecture/internal/infra/gRPC/service"
 	"github.com/marcofilho/Pos-GO-Expert/CleanArchitecture/internal/infra/graphQL/graph"
 	"github.com/marcofilho/Pos-GO-Expert/CleanArchitecture/internal/web/webserver"
@@ -45,6 +45,7 @@ func main() {
 	createOrderUseCase := NewCreateOrderUseCase(db, eventDispatcher)
 
 	webserver := webserver.NewWebServer(configs.WebServerPort)
+
 	webOrderHandler := NewWebOrderHandler(db, eventDispatcher)
 	webserver.AddHandler("/order", webOrderHandler.Create)
 	fmt.Println("Starting web server on port", configs.WebServerPort)
@@ -53,6 +54,7 @@ func main() {
 	grpcServer := grpc.NewServer()
 	createOrderService := service.NewOrderService(*createOrderUseCase)
 	pb.RegisterOrderServiceServer(grpcServer, createOrderService)
+
 	reflection.Register(grpcServer)
 
 	fmt.Println("Starting gRPC server on port", configs.GRPCServerPort)

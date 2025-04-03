@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 
-	"github.com/marcofilho/Pos-GO-Expert/CleanArchitecture/internal/infra/gRPC/internal/infra/gRPC/pb"
+	"github.com/marcofilho/Pos-GO-Expert/CleanArchitecture/internal/infra/gRPC/pb"
 	"github.com/marcofilho/Pos-GO-Expert/CleanArchitecture/internal/usecase"
 )
 
