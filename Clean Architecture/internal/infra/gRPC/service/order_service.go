@@ -1,6 +1,11 @@
 package service
 
-import "context"
+import (
+	"context"
+
+	"github.com/marcofilho/Pos-GO-Expert/CleanArchitecture/internal/infra/gRPC/internal/infra/gRPC/pb"
+	"github.com/marcofilho/Pos-GO-Expert/CleanArchitecture/internal/usecase"
+)
 
 type OrderService struct {
 	pb.UnimplementedOrderServiceServer
@@ -15,19 +20,18 @@ func NewOrderService(createOrderUseCase usecase.CreateOrderUseCase) *OrderServic
 
 func (s *OrderService) CreateOrder(ctx context.Context, in *pb.CreateOrderRequest) (*pb.CreateOrderResponse, error) {
 	dto := usecase.OrderInputDTO{
-		ID:    in.ID,
-		Price: in.Price,
-		Tax:   in.Tax,
+		ID:    in.Id,
+		Price: float64(in.Price),
+		Tax:   float64(in.Tax),
 	}
-
 	output, err := s.CreateOrderUseCase.Execute(dto)
 	if err != nil {
 		return nil, err
 	}
 	return &pb.CreateOrderResponse{
-		ID:         output.ID,
-		Price:      output.Price,
-		Tax:        output.Tax,
-		FinalPrice: output.FinalPrice,
+		Id:         output.ID,
+		Price:      float32(output.Price),
+		Tax:        float32(output.Tax),
+		FinalPrice: float32(output.FinalPrice),
 	}, nil
 }
