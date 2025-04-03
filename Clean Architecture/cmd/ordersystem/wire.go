@@ -5,7 +5,11 @@ import (
 
 	"github.com/google/wire"
 	"github.com/marcofilho/Pos-GO-Expert/CleanArchitecture/internal/entity"
+	"github.com/marcofilho/Pos-GO-Expert/CleanArchitecture/internal/event"
+	"github.com/marcofilho/Pos-GO-Expert/CleanArchitecture/internal/infra/database"
 	"github.com/marcofilho/Pos-GO-Expert/CleanArchitecture/internal/usecase"
+	"github.com/marcofilho/Pos-GO-Expert/CleanArchitecture/internal/web"
+	"github.com/marcofilho/Pos-GO-Expert/CleanArchitecture/pkg/events"
 )
 
 var setOrderRepositoryDependency = wire.NewSet(
