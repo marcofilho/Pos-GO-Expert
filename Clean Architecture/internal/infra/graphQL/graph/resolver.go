@@ -7,5 +7,7 @@ import "github.com/marcofilho/Pos-GO-Expert/CleanArchitecture/internal/usecase"
 // It serves as dependency injection for your app, add any dependencies you require here.
 
 type Resolver struct {
-	CreateOrderUseCase usecase.CreateOrderUseCase
+	CreateOrderUseCase  usecase.CreateOrderUseCase
+	GetOrderByIDUseCase usecase.GetOrderByIdUseCase
+	GetOrdersUseCase    usecase.GetOrdersUseCase
 }

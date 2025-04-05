@@ -32,7 +32,51 @@ func (r *mutationResolver) CreateOrder(ctx context.Context, input *model.OrderIn
 	}, nil
 }
 
+// GetOrderByID is the resolver for the getOrderById field.
+func (r *queryResolver) GetOrderByID(ctx context.Context, id string) (*model.Order, error) {
+	dto := usecase.OrderInputDTO{
+		ID: id,
+	}
+
+	output, err := r.GetOrderByIDUseCase.Execute(dto.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.Order{
+		ID:         output.ID,
+		Price:      float64(output.Price),
+		Tax:        float64(output.Tax),
+		FinalPrice: float64(output.FinalPrice),
+	}, nil
+}
+
+// GetOrders is the resolver for the getOrders field.
+func (r *queryResolver) GetOrders(ctx context.Context) ([]*model.Order, error) {
+	output, err := r.GetOrdersUseCase.Execute()
+	if err != nil {
+		return nil, err
+	}
+
+	var orders []*model.Order
+
+	for _, order := range output {
+		orders = append(orders, &model.Order{
+			ID:         order.ID,
+			Price:      float64(order.Price),
+			Tax:        float64(order.Tax),
+			FinalPrice: float64(order.FinalPrice),
+		})
+	}
+
+	return orders, nil
+}
+
 // Mutation returns MutationResolver implementation.
 func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
 
+// Query returns QueryResolver implementation.
+func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
+
 type mutationResolver struct{ *Resolver }
+type queryResolver struct{ *Resolver }

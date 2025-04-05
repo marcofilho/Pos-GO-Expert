@@ -29,11 +29,31 @@ func (r *OrderRepository) Save(order *entity.Order) error {
 	return nil
 }
 
-func (o *OrderRepository) GetTotal() (int, error) {
+func (o *OrderRepository) GetById() (int, error) {
 	var total int
 	err := o.DB.QueryRow("Select count(*) from orders").Scan(&total)
 	if err != nil {
 		return 0, err
 	}
 	return total, nil
+
+}
+
+func (o *OrderRepository) GetOrders() ([]*entity.Order, error) {
+	rows, err := o.DB.Query("SELECT id, price, tax, final_price FROM orders")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var orders []*entity.Order
+	for rows.Next() {
+		var order entity.Order
+		if err := rows.Scan(&order.ID, &order.Price, &order.Tax, &order.FinalPrice); err != nil {
+			return nil, err
+		}
+		orders = append(orders, &order)
+	}
+
+	return orders, nil
 }

@@ -33,6 +33,13 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	_, err = db.Exec(
+		`CREATE TABLE IF NOT EXISTS orders (
+		id varchar(255) NOT NULL,
+		price float NOT NULL, 
+		tax float NOT NULL, 
+		final_price float NOT NULL,
+		PRIMARY KEY (id))`)
 	defer db.Close()
 
 	rabbitMQChannel := getRabbitMQChannel()
@@ -43,6 +50,8 @@ func main() {
 	})
 
 	createOrderUseCase := NewCreateOrderUseCase(db, eventDispatcher)
+	getOrderByIDUseCase := NewGetOrderByIdUseCase(db)
+	getOrdersUseCase := NewGetOrdersUseCase(db)
 
 	webserver := webserver.NewWebServer(configs.WebServerPort)
 
@@ -52,7 +61,7 @@ func main() {
 	go webserver.Start()
 
 	grpcServer := grpc.NewServer()
-	createOrderService := service.NewOrderService(*createOrderUseCase)
+	createOrderService := service.NewOrderService(*createOrderUseCase, *getOrderByIDUseCase, *getOrdersUseCase)
 	pb.RegisterOrderServiceServer(grpcServer, createOrderService)
 
 	reflection.Register(grpcServer)
