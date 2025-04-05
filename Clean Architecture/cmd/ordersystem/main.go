@@ -50,22 +50,25 @@ func main() {
 	})
 
 	createOrderUseCase := NewCreateOrderUseCase(db, eventDispatcher)
-	getOrderByIDUseCase := NewGetOrderByIdUseCase(db)
+	getOrderByIdUseCase := NewGetOrderByIdUseCase(db)
 	getOrdersUseCase := NewGetOrdersUseCase(db)
 
-	webserver := webserver.NewWebServer(configs.WebServerPort)
+	webServer := webserver.NewWebServer(configs.WebServerPort)
 
 	webOrderHandler := NewWebOrderHandler(db, eventDispatcher)
-	webserver.AddHandler("/order", webOrderHandler.Create)
+
+	webServer.AddHandler("/order", webOrderHandler.Create)
+	webServer.AddHandler("/orders/{id}", webOrderHandler.GetOrderById)
+	webServer.AddHandler("/orders", webOrderHandler.GetOrders)
+
 	fmt.Println("Starting web server on port", configs.WebServerPort)
-	go webserver.Start()
+	go webServer.Start()
 
 	grpcServer := grpc.NewServer()
-	createOrderService := service.NewOrderService(*createOrderUseCase, *getOrderByIDUseCase, *getOrdersUseCase)
+	createOrderService := service.NewOrderService(*createOrderUseCase, *getOrderByIdUseCase, *getOrdersUseCase)
 	pb.RegisterOrderServiceServer(grpcServer, createOrderService)
 
 	reflection.Register(grpcServer)
-
 	fmt.Println("Starting gRPC server on port", configs.GRPCServerPort)
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", configs.GRPCServerPort))
 	if err != nil {
@@ -74,7 +77,9 @@ func main() {
 	go grpcServer.Serve(lis)
 
 	srv := graphql_handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{
-		CreateOrderUseCase: *createOrderUseCase,
+		CreateOrderUseCase:  *createOrderUseCase,
+		GetOrderByIdUseCase: *getOrderByIdUseCase,
+		GetOrdersUseCase:    *getOrdersUseCase,
 	}}))
 
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))

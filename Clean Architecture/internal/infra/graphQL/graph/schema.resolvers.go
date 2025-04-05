@@ -38,7 +38,7 @@ func (r *queryResolver) GetOrderByID(ctx context.Context, id string) (*model.Ord
 		ID: id,
 	}
 
-	output, err := r.GetOrderByIDUseCase.Execute(dto.ID)
+	output, err := r.GetOrderByIdUseCase.Execute(dto.ID)
 	if err != nil {
 		return nil, err
 	}

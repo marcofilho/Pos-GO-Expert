@@ -2,8 +2,10 @@ package web
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
+	"github.com/go-chi/chi"
 	"github.com/marcofilho/Pos-GO-Expert/CleanArchitecture/internal/entity"
 	"github.com/marcofilho/Pos-GO-Expert/CleanArchitecture/internal/usecase"
 	"github.com/marcofilho/Pos-GO-Expert/CleanArchitecture/pkg/events"
@@ -41,6 +43,45 @@ func (h *WebOrderHandler) Create(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	err = json.NewEncoder(w).Encode(output)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
+func (h *WebOrderHandler) GetOrderById(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+	fmt.Println("Extracted ID:", id) // Debug log
+
+	if id == "" {
+		http.Error(w, "id is required", http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	getOrderById := usecase.NewGetOrderByIdUseCase(h.OrderRepository)
+	output, err := getOrderById.Execute(id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	err = json.NewEncoder(w).Encode(output)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
+func (h *WebOrderHandler) GetOrders(w http.ResponseWriter, r *http.Request) {
+	getOrders := usecase.NewGetOrdersUseCase(h.OrderRepository)
+	output, err := getOrders.Execute()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	err = json.NewEncoder(w).Encode(output)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

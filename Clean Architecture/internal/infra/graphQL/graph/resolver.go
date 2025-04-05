@@ -8,6 +8,6 @@ import "github.com/marcofilho/Pos-GO-Expert/CleanArchitecture/internal/usecase"
 
 type Resolver struct {
 	CreateOrderUseCase  usecase.CreateOrderUseCase
-	GetOrderByIDUseCase usecase.GetOrderByIdUseCase
+	GetOrderByIdUseCase usecase.GetOrderByIdUseCase
 	GetOrdersUseCase    usecase.GetOrdersUseCase
 }

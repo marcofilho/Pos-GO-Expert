@@ -8,7 +8,7 @@ type GetOrdersUseCase struct {
 	OrderRepository entity.OrderRepositoryInterface
 }
 
-func NewGetOrdersOrderUseCase(
+func NewGetOrdersUseCase(
 	OrderRepository entity.OrderRepositoryInterface,
 ) *GetOrdersUseCase {
 	return &GetOrdersUseCase{

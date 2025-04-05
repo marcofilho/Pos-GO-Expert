@@ -18,10 +18,12 @@ func NewOrder(id string, price, tax float64) (*Order, error) {
 		Tax:        tax,
 		FinalPrice: price + tax,
 	}
+
 	err := order.Validate()
 	if err != nil {
 		return nil, err
 	}
+
 	return order, nil
 }
 
@@ -35,6 +37,7 @@ func (o *Order) Validate() error {
 	if o.Tax < 0 {
 		return errors.New("Tax cannot be negative")
 	}
+
 	return nil
 }
 
@@ -44,5 +47,6 @@ func (o *Order) CalculateFinalPrice() error {
 	if err != nil {
 		return err
 	}
+
 	return nil
 }

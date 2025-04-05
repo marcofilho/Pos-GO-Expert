@@ -6,7 +6,7 @@ type GetOrderByIdUseCase struct {
 	OrderRepository entity.OrderRepositoryInterface
 }
 
-func NewGetOrderByIdUseCaseUseCase(
+func NewGetOrderByIdUseCase(
 	OrderRepository entity.OrderRepositoryInterface,
 ) *GetOrderByIdUseCase {
 	return &GetOrderByIdUseCase{
@@ -15,7 +15,7 @@ func NewGetOrderByIdUseCaseUseCase(
 }
 
 func (c *GetOrderByIdUseCase) Execute(id string) (OrderOutputDTO, error) {
-	order, err := c.OrderRepository.GetByID(id)
+	order, err := c.OrderRepository.GetOrderById(id)
 	if err != nil {
 		return OrderOutputDTO{}, err
 	}

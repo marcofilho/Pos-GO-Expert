@@ -26,16 +26,19 @@ func (r *OrderRepository) Save(order *entity.Order) error {
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
-func (o *OrderRepository) GetById() (int, error) {
-	var total int
-	err := o.DB.QueryRow("Select count(*) from orders").Scan(&total)
-	if err != nil {
-		return 0, err
+func (o *OrderRepository) GetOrderById(id string) (*entity.Order, error) {
+	row := o.DB.QueryRow("SELECT id, price, tax, final_price FROM orders WHERE id = ?", id)
+
+	var order entity.Order
+
+	if err := row.Scan(&order.ID, &order.Price, &order.Tax, &order.FinalPrice); err != nil {
+		return nil, err
 	}
-	return total, nil
+	return &order, nil
 
 }
 
@@ -47,6 +50,7 @@ func (o *OrderRepository) GetOrders() ([]*entity.Order, error) {
 	defer rows.Close()
 
 	var orders []*entity.Order
+
 	for rows.Next() {
 		var order entity.Order
 		if err := rows.Scan(&order.ID, &order.Price, &order.Tax, &order.FinalPrice); err != nil {
